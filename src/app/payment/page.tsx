@@ -1,6 +1,7 @@
 "use client";
 
 import Header from "@/components/common/Header";
+import { formatPrice } from "@/utils/format";
 import { resetOrder } from "@/features/order/orderSlice";
 import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
@@ -45,11 +46,11 @@ export default function PaymentPage() {
     // Dispatch action to add the order to history
     dispatch(addOrderToHistory(newOrder));
 
-    // Reset order and table
-    dispatch(resetOrder());
+    // Redirect to invoice detail page with ID
+    router.push(`/invoice/${newOrder.id}`);
 
-    // Redirect to invoice page
-    router.push("/invoice");
+    // Reset order and table after routing
+    dispatch(resetOrder());
   };
 
   return (
@@ -76,13 +77,13 @@ export default function PaymentPage() {
                 <span>
                   {item.name} x {item.quantity}
                 </span>
-                <span>Rp {(item.price * item.quantity).toLocaleString()}</span>
+                <span>{formatPrice(item.price * item.quantity)}</span>
               </li>
             ))}
           </ul>
           <div className="border-t border-gray-200 pt-4 mt-4 flex justify-between font-bold text-base sm:text-lg text-gray-800">
             <span>Total:</span>
-            <span>Rp {total.toLocaleString()}</span>
+            <span>{formatPrice(total)}</span>
           </div>
         </section>
 

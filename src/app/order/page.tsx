@@ -1,6 +1,7 @@
 "use client";
 
 import Header from "@/components/common/Header";
+import { formatPrice } from "@/utils/format";
 import { useAppSelector } from "@/store/hooks";
 import { useRouter } from "next/navigation";
 import { CheckCircle, Clock, XCircle } from "lucide-react";
@@ -93,7 +94,7 @@ export default function OrdersPage() {
                   <p>
                     Total:{" "}
                     <span className="font-semibold text-gray-900">
-                      Rp{order.total}
+                      {formatPrice(order.total)}
                     </span>
                   </p>
                 </div>

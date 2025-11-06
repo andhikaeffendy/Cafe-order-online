@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useAppSelector } from "@/store/hooks";
 import Header from "@/components/common/Header";
+import { formatPrice } from "@/utils/format";
 import { CheckCircle, Clock, XCircle } from "lucide-react";
 
 export default function OrderDetailPage() {
@@ -92,8 +93,7 @@ export default function OrderDetailPage() {
               </ul>
             </div>
             <p>
-              <span className="font-medium text-gray-900">Total:</span> Rp
-              {order.total}
+              <span className="font-medium text-gray-900">Total:</span> {formatPrice(order.total)}
             </p>
           </div>
         </div>

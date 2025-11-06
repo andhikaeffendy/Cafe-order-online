@@ -29,9 +29,10 @@ export default function MenuCardItem({
           <Image
             src={menu.image}
             alt={menu.name}
-            layout="fill"
-            objectFit="cover"
-            className="rounded-md"
+            fill
+            className="rounded-md object-cover"
+            sizes="56px"
+            priority={false}
           />
         </div>
         <div>

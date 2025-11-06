@@ -1,29 +1,33 @@
 "use client";
 
 import Header from "@/components/common/Header";
+import { useParams, useRouter } from "next/navigation";
+import { useAppSelector } from "@/store/hooks";
 import { formatPrice } from "@/utils/format";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
 
-export default function InvoiceSuccessPage() {
+export default function InvoiceDetailPage() {
+  const { id } = useParams();
   const router = useRouter();
-  const table = useSelector((state: RootState) => state.order.table);
-  const order = useSelector((state: RootState) => state.order.order);
-
-  const total = order.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
+  const order = useAppSelector((state) =>
+    state.orderHistory.history.find((o) => o.id === id)
   );
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push("/table"); // redirect otomatis
-    }, 5000);
-
-    return () => clearTimeout(timer);
-  }, [router]);
+  if (!order) {
+    return (
+      <div className="min-h-screen bg-[#f5eee5] p-6">
+        <Header title="Invoice" showBack />
+        <div className="max-w-2xl mx-auto bg-white rounded-2xl p-6 shadow">
+          <p className="text-red-600 font-medium">Invoice tidak ditemukan.</p>
+          <button
+            onClick={() => router.push("/table")}
+            className="mt-4 px-4 py-2 bg-gray-800 text-white rounded-lg"
+          >
+            Kembali ke Halaman Meja
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f5eee5] flex flex-col">
@@ -35,36 +39,23 @@ export default function InvoiceSuccessPage() {
             🎉 Pembayaran Sukses!
           </h1>
           <p className="text-gray-700">Terima kasih atas pesanan Anda.</p>
-          <p className="text-gray-600 mb-4">
-            Nomor Meja: <span className="font-semibold">{table}</span>
-          </p>
+          <p className="text-gray-600 mb-4">No. Transaksi: {order.id}</p>
 
           <div className="border-t border-gray-200 pt-4 text-left">
             <h2 className="text-lg font-semibold text-gray-800 mb-2">
               Detail Pesanan:
             </h2>
             <ul className="divide-y divide-gray-200 text-sm sm:text-base text-gray-700 mb-4">
-              {order.map((item) => (
-                <li key={item.id} className="py-2 flex justify-between">
-                  <span>
-                    {item.name} x {item.quantity}
-                  </span>
-                  <span>
-                    {formatPrice(item.price * item.quantity)}
-                  </span>
-                </li>
+              {order.items.map((item, idx) => (
+                <li key={idx} className="py-2">{item}</li>
               ))}
             </ul>
             <div className="flex justify-between font-bold text-gray-800 border-t pt-3">
               <span>Total:</span>
-              <span>{formatPrice(total)}</span>
+              <span>{formatPrice(order.total)}</span>
             </div>
           </div>
         </div>
-
-        <p className="text-sm text-gray-500 mt-8">
-          Anda akan diarahkan kembali ke halaman utama...
-        </p>
 
         <button
           onClick={() => router.push("/table")}

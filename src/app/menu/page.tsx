@@ -30,6 +30,13 @@ export default function MenuPage() {
     }
   }, [tableParam, dispatch]);
 
+  // Guard: jika meja tidak ada, paksa kembali ke halaman pemilihan meja
+  useEffect(() => {
+    if (!tableParam && !table) {
+      router.replace("/table");
+    }
+  }, [tableParam, table, router]);
+
   const categories = [
     "All",
     ...Array.from(new Set(menuItems.map((m) => m.category))),
@@ -67,6 +74,7 @@ export default function MenuPage() {
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const groupedMenus = menuItems.reduce((acc, item) => {
